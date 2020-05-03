@@ -3,6 +3,7 @@ package com.b8ne.RNPusherPushNotifications;
 import android.util.Log;
 
 import android.app.Activity;
+import java.util.Map.Entry; 
 
 import java.util.Set;
 
@@ -64,6 +65,11 @@ public class PusherWrapper {
                         final WritableMap map = new WritableNativeMap();
                         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
+                        final WritableMap data = new WritableNativeMap();
+                        for (Entry<String, String> entry : remoteMessage.getData().entrySet()) {
+                            data.putString(entry.getKey(), entry.getValue());
+                        }
+
                         if (notification != null) {
                             map.putString("body", notification.getBody());
                             map.putString("title", notification.getTitle());
@@ -71,6 +77,7 @@ public class PusherWrapper {
                             map.putString("click_action", notification.getClickAction());
                             map.putString("icon", notification.getIcon());
                             map.putString("color", notification.getColor());
+                            map.putMap("data", data);
                             // map.putString("link", notification.getLink());
 
                             context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
